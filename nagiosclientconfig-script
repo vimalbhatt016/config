@@ -1,0 +1,105 @@
+#!/bin/bash
+
+########## Nagios-Client-Installation ##########
+
+/bin/echo "NAGIOS CLIENT INSTALATION STARTING………!!!!"
+/usr/bin/yum install wget gcc glibc glibc-common gd gd-devel make net-snmp openssl-devel -y
+useradd nagios
+#echo "nagios123" |passwd nagios –stdin
+###############
+mkdir -p /root/nagios
+cd /root/nagios
+/usr/bin/wget http://www.nagios-plugins.org/download/nagios-plugins-2.1.1.tar.gz
+/usr/bin/wget https://excellmedia.dl.sourceforge.net/project/nagios/nrpe-2.x/nrpe-2.15/nrpe-2.15.tar.gz
+###############
+cd /root/nagios
+tar xzf nagios-plugins-2.1.1.tar.gz
+###############
+cd /root/nagios/nagios-plugins-2.1.1
+./configure
+make
+make install
+###############
+/usr/bin/chown nagios:nagios /usr/local/nagios
+/usr/bin/chown -R nagios:nagios /usr/local/nagios/libexec
+sleep 5
+yum install xinetd -y
+cd /root/nagios
+tar xzf nrpe-2.15.tar.gz
+cd /root/nagios/nrpe-2.15
+./configure
+make all
+make install-plugin
+make install-daemon
+make install-daemon-config
+make install-xinetd
+sleep 5
+/bin/sed -i 's/127.0.0.1/127.0.0.1 localhost  202.87.41.197/g' /etc/xinetd.d/nrpe
+/bin/echo "nrpe            5666/tcp                #NRPE" >> /etc/services
+
+service xinetd start
+chkconfig xinetd on
+
+/bin/netstat -at | grep nrpe
+/usr/local/nagios/libexec/check_nrpe -H localhost
+
+/bin/echo "NAGIOS CLIENT SUCCESSFULLY INSTALLED "
+
+
+command[check_users]=/usr/local/nagios/libexec/check_users -w 5 -c 10
+command[check_load]=/usr/local/nagios/libexec/check_load -w 4.8,4.2,3.6 -c 5.4,4.8,4.2
+command[check_root]=/usr/local/nagios/libexec/check_disk -w 20% -c 10% -p /dev/sda1
+command[check_mnt]=/usr/local/nagios/libexec/check_disk -w 20% -c 10% -p /dev/sdb
+command[check_zombie_procs]=/usr/local/nagios/libexec/check_procs -w 5 -c 10 -s Z
+command[check_total_procs]=/usr/local/nagios/libexec/check_procs -w 550 -c 750
+command[check_nginx]=/usr/local/nagios/libexec/check_tcp -p 80
+command[check_redis]=/usr/local/nagios/libexec/check_tcp -p 6379
+command[check_php-fpm]=/usr/local/nagios/libexec/check_tcp -p 9000
+command[check_mem]=/usr/local/nagios/libexec/check_mem.pl -w 10 -c 5 -f
+command[check_ntp]=/usr/local/nagios/libexec/check_ntp -H 0.centos.pool.ntp.org -c 10 -w 5
+command[check_loadbancer_80]=/usr/local/nagios/libexec/check_tcp -H 107.178.242.209 -p 80
+command[check_loadbancer_443]=/usr/local/nagios/libexec/check_tcp -H 107.178.242.209 -p 443
+command[check_processlist]=/usr/local/nagios/libexec/checkMySQLProcesslist.sh -P 3306 -u nagios -p nagios@#321 -w900 -c1000
+
+
+define service{
+        use                             local-service         ; Name of service template to use
+        host_name                       salt-mysql-sngmpg
+        service_description             Max Connection reached
+        check_command                   check_mysql_health!nagios!nagios123!threads-connected!192.168.10.187!3306!600!700
+        notifications_enabled           1
+}
+
+
+define service{
+        use                             local-service         ; Name of service template to use
+        host_name                       salt-mysql-sngmpg
+        check_interval                  1
+        service_description             MYSQL Max Connection reached
+        check_command                   check_mysql_health!nagios!nagios123!threads-connected!192.168.10.187!3306!600!700
+        notifications_enabled           1
+
+}
+define service{
+        use                             local-service         ; Name of service template to use
+        host_name                       salt-mysql-sngmpg
+        check_interval                  1
+        service_description             MYSQL Slow Queries
+        check_command                   check_mysql_health!nagios!nagios123!slow-queries!192.168.10.187!3306!100!200
+        notifications_enabled           1
+
+}
+define service{
+        use                             local-service         ; Name of service template to use
+        host_name                       salt-mysql-sngmpg
+        check_interval                  1
+        service_description             MYSQL Long Queries
+        check_command                   check_mysql_health!nagios!nagios123!long-running-procs!192.168.10.187!3306!1!2
+        notifications_enabled           1
+
+}
+
+
+/usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios. cfg
+
+
