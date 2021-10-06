@@ -1,0 +1,266 @@
+ upstream app1 {
+             least_conn;
+              ip_hash;
+                 server 10.64.14.35:8088;
+                 server 10.64.14.36:8088;
+                 #server 10.64.14.42:8088;
+}
+
+
+    server {
+        listen 80;
+     listen 443 ssl;
+     server_name 103.56.210.21;
+
+#ssl on;
+#    ssl_certificate         /etc/nginx/ssl/54646.co/server.crt;
+ #   ssl_certificate_key     /etc/nginx/ssl/54646.co/server.key;
+ssl_certificate         /etc/nginx/ssl/103.56.210.21/103.56.210.21.crt.txt;
+ssl_certificate_key     /etc/nginx/ssl/103.56.210.21/103.56.210.21.key;
+
+   # ssl_trusted_certificate /etc/nginx/ssl/54646.co/ca-certs.pem;
+
+        location / {
+            proxy_buffer_size   128k;
+            proxy_buffers   4 256k;
+            proxy_busy_buffers_size   256k;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_pass http://app1;
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+                }
+
+location /IdeaCallBack/ {
+        proxy_pass https://103.56.210.21:5443;
+    }
+
+
+#               }
+
+
+        error_page 502          /502.html;
+    location = /502.html {
+        root   /usr/share/nginx/html;
+    }
+        error_page 504          /504.html;
+    location = /504.html {
+        root   /usr/share/nginx/html;
+    }
+
+
+
+    }
+
+
+    server {
+        listen 80;
+     listen 443 ssl;
+     server_name 54646.co;
+
+#ssl on;
+    # ssl_certificate        /etc/nginx/ssl/54646.co/54646.co.crt;
+    ssl_certificate         /etc/nginx/ssl/54646.co/bundle.crt;
+    ssl_certificate_key     /etc/nginx/ssl/54646.co/54646.co.key;
+#ssl_certificate         /etc/nginx/ssl/103.56.210.21/103.56.210.21.crt;
+#ssl_certificate_key     /etc/nginx/ssl/103.56.210.21/103.56.210.21.key;
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+#   ssl_prefer_server_ciphers on;
+ #  ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-RC4-SHA:ECDHE-RSA-AES128-SHA:AE                                                                                   S128-SHA:RC4-SHA;
+   # ssl_trusted_certificate /etc/nginx/ssl/54646.co/ca-certs.pem;
+
+        location / {
+            proxy_buffer_size   128k;
+            proxy_buffers   4 256k;
+            proxy_busy_buffers_size   256k;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_pass http://app1;
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+                }
+
+location /IdeaCallBack/ {
+       proxy_pass https://103.56.210.21:5443;
+    }
+
+
+#                }
+
+
+
+        error_page 502          /502.html;
+    location = /502.html {
+        root   /usr/share/nginx/html;
+    }
+        error_page 504          /504.html;
+    location = /504.html {
+        root   /usr/share/nginx/html;
+    }
+
+
+
+    }
+
+
+
+
+server {
+        listen 80;
+     listen 443 ssl;
+     server_name o.hungama.com;
+
+#ssl on;
+    ssl_certificate         /etc/nginx/ssl/ohungama/starbundl.crt;
+    ssl_certificate_key     /etc/nginx/ssl/ohungama/starthungama.key;
+#ssl_certificate         /etc/nginx/ssl/103.56.210.21/103.56.210.21.crt;
+#ssl_certificate_key     /etc/nginx/ssl/103.56.210.21/103.56.210.21.key;
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+#   ssl_prefer_server_ciphers on;
+ #  ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-RC4-SHA:ECDHE-RSA-AES128-SHA:AE                                                                                   S128-SHA:RC4-SHA;
+   # ssl_trusted_certificate /etc/nginx/ssl/54646.co/ca-certs.pem;
+
+        location / {
+            proxy_buffer_size   128k;
+            proxy_buffers   4 256k;
+            proxy_busy_buffers_size   256k;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_pass http://app1;
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+                }
+
+location /IdeaCallBack/ {
+       proxy_pass https://103.56.210.21:5443;
+    }
+
+
+
+
+    error_page 502          /502.html;
+    location = /502.html {
+        root   /usr/share/nginx/html;
+    }
+        error_page 504          /504.html;
+    location = /504.html {
+        root   /usr/share/nginx/html;
+    }
+
+
+
+    }
+
+
+
+
+
+
+server {
+        listen 80;
+     listen 443 ssl;
+     server_name akm-images.54646.co;
+
+#ssl on;
+    ssl_certificate         /etc/nginx/ssl/54646.co/bundle.crt;
+    ssl_certificate_key     /etc/nginx/ssl/54646.co/54646.co.key;
+
+#ssl_certificate         /etc/nginx/ssl/103.56.210.21/103.56.210.21.crt;
+#ssl_certificate_key     /etc/nginx/ssl/103.56.210.21/103.56.210.21.key;
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+#   ssl_prefer_server_ciphers on;
+ #  ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-RC4-SHA:ECDHE-RSA-AES128-SHA:AE                                                                                   S128-SHA:RC4-SHA;
+   # ssl_trusted_certificate /etc/nginx/ssl/54646.co/ca-certs.pem;
+
+        location / {
+            proxy_buffer_size   128k;
+            proxy_buffers   4 256k;
+            proxy_busy_buffers_size   256k;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_pass http://app1;
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+                }
+
+location /IdeaCallBack/ {
+       proxy_pass https://103.56.210.21:5443;
+    }
+
+
+
+
+    error_page 502          /502.html;
+    location = /502.html {
+        root   /usr/share/nginx/html;
+    }
+        error_page 504          /504.html;
+    location = /504.html {
+        root   /usr/share/nginx/html;
+    }
+
+
+
+}
+
+
+server {
+        listen 80;
+     listen 443 ssl;
+     server_name hng.am;
+
+#ssl on;
+    ssl_certificate         /etc/nginx/ssl/hng.am/www.hng.am.crt.txt;
+    ssl_certificate_key     /etc/nginx/ssl/hng.am/hngam.key;
+
+#ssl_certificate         /etc/nginx/ssl/103.56.210.21/103.56.210.21.crt;
+#ssl_certificate_key     /etc/nginx/ssl/103.56.210.21/103.56.210.21.key;
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+#   ssl_prefer_server_ciphers on;
+ #  ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-RC4-SHA:ECDHE-RSA-AES128-SHA:AE                                                                                   S128-SHA:RC4-SHA;
+   # ssl_trusted_certificate /etc/nginx/ssl/54646.co/ca-certs.pem;
+
+        location / {
+            proxy_buffer_size   128k;
+            proxy_buffers   4 256k;
+            proxy_busy_buffers_size   256k;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_pass http://app1;
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+                }
+
+location /IdeaCallBack/ {
+       proxy_pass https://103.56.210.21:5443;
+    }
+
+
+
+
+    error_page 502          /502.html;
+    location = /502.html {
+        root   /usr/share/nginx/html;
+    }
+        error_page 504          /504.html;
+    location = /504.html {
+        root   /usr/share/nginx/html;
+    }
+
+
+
+
+
+
+
+    }
