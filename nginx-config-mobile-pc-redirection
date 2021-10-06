@@ -30,3 +30,27 @@ if ($mobile_rewrite = perform) {
   #rewrite ^ https://hungamagames.com/app$request_uri? redirect;
   break;
 }
+
+#=============================================================================
+
+location /app/ {
+    proxy_pass https://prd-api.hungamagames.com/;
+      proxy_redirect     off;
+     proxy_set_header   Host $host;
+}
+#sub_filter "http://laptop.hungama.com/" "http://hungamagames.com/app/";
+#    sub_filter_once off;
+
+
+#location /app/{
+#        proxy_set_header X-Forwarded-Host $host;
+#        proxy_set_header X-Forwarded-Server $host;
+#        proxy_set_header Host $http_host;
+#        proxy_set_header X-Ssl on;
+#        proxy_set_header X-NginX-Proxy true;
+#        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#        proxy_pass https://prd-api.hungamagames.com/;
+#        proxy_redirect https://prd-api.hungamagames.com/ $scheme://$host/;
+#        proxy_redirect http://prd-api.hungamagames.com/ $scheme://$host/;
+#    }
+}
