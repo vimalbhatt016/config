@@ -1,0 +1,138 @@
+ 
+worker_processes 4;
+
+events { worker_connections 1024; }
+
+http {
+
+  map $http_upgrade $connection_upgrade {
+        default upgrade;
+        '' close;
+    }
+
+	client_max_body_size 100M;
+
+	upstream websocket {
+       server localhost:9000;
+  }
+
+	server {
+	    listen 9000;
+
+	    location ~ ^/api/v1/auth {
+			rewrite ^/auth/(.*) /$1 break;
+		    proxy_pass http://auth_1.0:9001;
+	        proxy_http_version 1.1;
+	        proxy_set_header Upgrade $http_upgrade;
+	        proxy_set_header Connection 'upgrade';
+	        proxy_set_header Host $host;
+	        proxy_cache_bypass $http_upgrade;
+	      }
+		  location ~ ^/api/v1/user {
+		    rewrite ^/user/(.*) /$1 break;
+	        proxy_pass http://user_1.0:9002;
+	        proxy_http_version 1.1;
+	        proxy_set_header Upgrade $http_upgrade;
+	        proxy_set_header Connection 'upgrade';
+	        proxy_set_header Host $host;
+	        proxy_cache_bypass $http_upgrade;
+	      }
+		  	location ~ ^/user/images {
+		  	rewrite ^/(.*) /$1 break;
+	      	proxy_pass http://user_1.0:9002;
+	      	proxy_http_version 1.1;
+	      	proxy_set_header Upgrade $http_upgrade;
+	      	proxy_set_header Connection 'upgrade';
+	      	proxy_set_header Host $host;
+	      	proxy_cache_bypass $http_upgrade;
+	      }
+		  location ~ ^/api/v1/master {
+		  	rewrite ^/master/(.*) /$1 break;
+	      	proxy_pass http://master_1.0:9003;
+	      	proxy_http_version 1.1;
+	      	proxy_set_header Upgrade $http_upgrade;
+	      	proxy_set_header Connection 'upgrade';
+	      	proxy_set_header Host $host;
+	      	proxy_cache_bypass $http_upgrade;
+	      }
+		  location ~ ^/master {
+		  	rewrite ^/(.*) /$1 break;
+	      	proxy_pass http://master_1.0:9003;
+	      	proxy_http_version 1.1;
+	      	proxy_set_header Upgrade $http_upgrade;
+	      	proxy_set_header Connection 'upgrade';
+	      	proxy_set_header Host $host;
+	      	proxy_cache_bypass $http_upgrade;
+	      }
+		  location ~ ^/api/v1/payment {
+		  	rewrite ^/payment/(.*) /$1 break;
+	      	proxy_pass http://payment_1.0:9004;
+	      	proxy_http_version 1.1;
+	      	proxy_set_header Upgrade $http_upgrade;
+	      	proxy_set_header Connection 'upgrade';
+	      	proxy_set_header Host $host;
+	      	proxy_cache_bypass $http_upgrade;
+	      }
+		  location ~ ^/api/v1/admin {
+		  	rewrite ^/admin/(.*) /$1 break;
+	      	proxy_pass http://admin_1.0:9005;
+	      	proxy_http_version 1.1;
+	      	proxy_set_header Upgrade $http_upgrade;
+	      	proxy_set_header Connection 'upgrade';
+	      	proxy_set_header Host $host;
+	      	proxy_cache_bypass $http_upgrade;
+	      }
+		  location ~ ^/admin {
+		  	rewrite ^/(.*) /$1 break;
+	      	proxy_pass http://admin_1.0:9005;
+	      	proxy_http_version 1.1;
+	      	proxy_set_header Upgrade $http_upgrade;
+	      	proxy_set_header Connection 'upgrade';
+	      	proxy_set_header Host $host;
+	      	proxy_cache_bypass $http_upgrade;
+	      }
+		  location ~ ^/api/v1/game {
+			rewrite ^/game/(.*) /$1 break;
+			proxy_pass http://game_1.0:9006;
+			proxy_http_version 1.1;
+			proxy_set_header Upgrade $http_upgrade;
+			proxy_set_header Connection 'upgrade';
+			proxy_set_header Host $host;
+			proxy_cache_bypass $http_upgrade;
+		  }
+		   location ~ ^/game {
+		  	rewrite ^/(.*) /$1 break;
+	      	proxy_pass http://game_1.0:9006;
+	      	proxy_http_version 1.1;
+	      	proxy_set_header Upgrade $http_upgrade;
+	      	proxy_set_header Connection 'upgrade';
+	      	proxy_set_header Host $host;
+	      	proxy_cache_bypass $http_upgrade;
+	      }
+		  location ~ ^/api/v1/home {
+		  	rewrite ^/home/(.*) /$1 break;
+	      	proxy_pass http://home_1.0:9007;
+	      	proxy_http_version 1.1;
+	      	proxy_set_header Upgrade $http_upgrade;
+	      	proxy_set_header Connection 'upgrade';
+	      	proxy_set_header Host $host;
+	      	proxy_cache_bypass $http_upgrade;
+	      }
+		  location ~ ^/api/v1/logs {
+		  	rewrite ^/logs/(.*) /$1 break;
+	      	proxy_pass http://logs_1.0:5001;
+	      	proxy_http_version 1.1;
+	      	proxy_set_header Upgrade $http_upgrade;
+	      	proxy_set_header Connection 'upgrade';
+	      	proxy_set_header Host $host;
+	      	proxy_cache_bypass $http_upgrade;
+	      }
+      location / {
+          proxy_pass http://websocket;
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection $connection_upgrade;
+          proxy_set_header Host $host;
+      }
+	}
+}
