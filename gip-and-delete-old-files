@@ -1,0 +1,5 @@
+#!/bin/bash
+D=`date +%Y%m%d --date='1 day ago'`
+cd /mnt/log/test/SecureDelivery/
+gzip `ls -ltrh debug.log.$D`
+find /mnt/log/test/SecureDelivery/ -type f -mtime +9 -execdir rm '{}' \;
