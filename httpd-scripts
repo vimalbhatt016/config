@@ -1,0 +1,17 @@
+======= Script to clear memory ============
+#!/bin/bash
+status=`free -g |awk '{print $3}' |grep -v free |head -n 1`
+if [ $status -gt 15 ];then
+echo `/etc/init.d/httpd restart`
+else
+echo "OK"
+fi
+=========== Script to restart httpd=========
+
+#!/bin/bash
+comm=`ps -efl | grep httpd | wc -l`
+if [ $comm -gt 800 ];then
+echo `killall -9 httpd; sleep 2 ; /etc/init.d/httpd start` 
+else 
+echo ok
+fi
