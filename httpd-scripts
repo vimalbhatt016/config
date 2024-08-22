@@ -15,3 +15,11 @@ echo `killall -9 httpd; sleep 2 ; /etc/init.d/httpd start`
 else 
 echo ok
 fi
+
+
++++++++++++++++++++============Apache hanged +++++++++++===================================
+
+#!/bin/bash/
+service httpd stop;service httpd status;sleep;service httpd start 
+#killall -9 httpd;sleep 2;ipcs -s | grep apache | perl -e 'while (<STDIN>) { @a=split(/\s+/);  print `ipcrm sem $a[1]`}';`pkill  -9 httpd`;service httpd restart;sleep 5;service httpd status;curl localhost
+watch 'uptime;ip r;df -h ;free -g'
